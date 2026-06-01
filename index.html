@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nutrition in Cleft & Craniofacial Care</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0B2240; --navyMid: #163459; --teal: #1D9E75; --tealLight: #5DCAA5;
+    --tealPale: #E1F5EE; --amber: #C8860A; --amberPale: #FDF3E0;
+    --coral: #C94E28; --coralPale: #FAECE7; --white: #FFFFFF;
+    --offWhite: #F7F8FA; --muted: #6B7A8D; --border: #E2E8F0; --dark: #0F2235;
+  }
+  body { background: #DDE3ED; font-family: 'Outfit', sans-serif; min-height: 100vh; padding: 60px 20px 80px; color: var(--navy); }
+
+  .nav-bar { position: fixed; top: 0; left: 0; right: 0; height: 50px; background: var(--navy); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+  .nav-title { color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 500; letter-spacing: 0.04em; }
+  .nav-controls { display: flex; gap: 8px; align-items: center; }
+  .nav-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 5px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-family: 'Outfit', sans-serif; font-weight: 500; transition: background 0.15s; }
+  .nav-btn:hover { background: rgba(255,255,255,0.2); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .slide-counter { color: rgba(255,255,255,0.5); font-size: 12px; min-width: 60px; text-align: center; }
+  .section-pill { background: rgba(29,158,117,0.25); color: var(--tealLight); font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; }
+  .progress-wrap { position: fixed; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(11,34,64,0.15); z-index: 101; }
+  .progress-bar { height: 100%; background: var(--teal); transition: width 0.3s ease; }
+
+  .deck { margin-top: 68px; display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .slide { width: 1100px; min-height: 618px; background: var(--white); border-radius: 14px; box-shadow: 0 6px 32px rgba(11,34,64,0.15); overflow: hidden; display: none; flex-direction: column; position: relative; }
+  .slide.active { display: flex; }
+
+  /* TITLE SLIDE */
+  .slide-title { background: var(--navy); justify-content: center; padding: 64px 80px; position: relative; overflow: hidden; }
+  .slide-title::before { content: ''; position: absolute; right: -80px; top: -100px; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(29,158,117,0.15) 0%, transparent 65%); }
+  .slide-title::after { content: ''; position: absolute; right: 60px; bottom: 20px; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(29,158,117,0.08) 0%, transparent 70%); }
+  .title-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tealLight); margin-bottom: 18px; }
+  .title-main { font-family: 'Playfair Display', serif; font-size: 54px; line-height: 1.1; color: var(--white); max-width: 700px; margin-bottom: 40px; }
+  .title-presenter { font-size: 16px; color: rgba(255,255,255,0.65); }
+  .title-presenter strong { color: rgba(255,255,255,0.9); display: block; font-size: 18px; margin-bottom: 4px; font-weight: 500; }
+
+  /* SECTION DIVIDER */
+  .slide-section { background: var(--navyMid); justify-content: center; padding: 60px 80px; position: relative; overflow: hidden; }
+  .slide-section::before { content: ''; position: absolute; left: -80px; bottom: -80px; width: 380px; height: 380px; border-radius: 50%; background: radial-gradient(circle, rgba(29,158,117,0.12) 0%, transparent 70%); }
+  .section-ghost { font-family: 'Playfair Display', serif; font-size: 180px; color: rgba(255,255,255,0.04); position: absolute; right: 40px; top: 20px; line-height: 1; user-select: none; }
+  .section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tealLight); margin-bottom: 14px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 40px; color: var(--white); line-height: 1.2; max-width: 620px; margin-bottom: 18px; }
+  .section-desc { font-size: 15px; color: rgba(255,255,255,0.5); max-width: 520px; line-height: 1.6; }
+
+  /* CONTENT SLIDE */
+  .slide-content { padding: 0; }
+  .slide-header { padding: 22px 44px 18px; border-bottom: 1px solid var(--border); }
+  .slide-eyebrow { font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 5px; }
+  .slide-heading { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--navy); line-height: 1.2; }
+  .teal-bar { height: 4px; background: var(--teal); width: 100%; }
+  .slide-body { padding: 22px 44px 26px; flex: 1; }
+
+  /* GRID LAYOUTS */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .two-col-wide { display: grid; grid-template-columns: 1.5fr 1fr; gap: 18px; }
+  .four-col { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
+
+  /* CARDS */
+  .card { background: var(--offWhite); border-radius: 10px; padding: 16px 18px; border: 1px solid var(--border); }
+  .card-teal { background: var(--tealPale); border-color: rgba(29,158,117,0.2); }
+  .card-amber { background: var(--amberPale); border-color: rgba(200,134,10,0.2); }
+  .card-coral { background: var(--coralPale); border-color: rgba(201,78,40,0.2); }
+  .card-navy { background: var(--navy); }
+  .card h4 { font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .card-teal h4 { color: var(--teal); }
+  .card-amber h4 { color: var(--amber); }
+  .card-coral h4 { color: var(--coral); }
+  .card-navy h4 { color: var(--tealLight); }
+  .card p { font-size: 13px; line-height: 1.6; color: var(--navy); }
+  .card-navy p { color: rgba(255,255,255,0.8); }
+
+  /* LISTS */
+  .dot-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .dot-list li { font-size: 13px; line-height: 1.5; color: var(--navy); padding-left: 18px; position: relative; }
+  .dot-list li::before { content: ''; position: absolute; left: 0; top: 7px; width: 7px; height: 7px; border-radius: 50%; background: var(--teal); }
+  .dot-list li.warn::before { background: var(--amber); }
+  .dot-list li.alert::before { background: var(--coral); }
+
+  /* STAT BOXES */
+  .stat-box { background: var(--navy); border-radius: 10px; padding: 16px 18px; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 36px; color: var(--tealLight); line-height: 1; margin-bottom: 4px; }
+  .stat-label { font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.4; }
+
+  /* PEARL */
+  .pearl { background: var(--navy); border-radius: 10px; padding: 14px 18px; display: flex; gap: 12px; align-items: flex-start; }
+  .pearl-icon { width: 26px; height: 26px; border-radius: 50%; background: var(--teal); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; color: white; margin-top: 1px; }
+  .pearl p { font-size: 13px; color: rgba(255,255,255,0.88); line-height: 1.6; }
+  .pearl strong { color: var(--tealLight); }
+
+  /* STEP */
+  .step { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; background: var(--offWhite); border-radius: 9px; border: 1px solid var(--border); }
+  .step-num { width: 26px; height: 26px; border-radius: 50%; background: var(--teal); color: white; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step h5 { font-size: 12px; font-weight: 600; color: var(--navy); margin-bottom: 2px; }
+  .step p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* TABLE */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .data-table th { background: var(--navy); color: white; padding: 9px 12px; text-align: left; font-weight: 500; font-size: 11px; }
+  .data-table th:first-child { border-radius: 7px 0 0 0; }
+  .data-table th:last-child { border-radius: 0 7px 0 0; }
+  .data-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--navy); }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:nth-child(even) td { background: var(--offWhite); }
+
+  /* PULL QUOTE */
+  .pull-quote { border-left: 3px solid var(--teal); padding: 12px 18px; background: var(--tealPale); border-radius: 0 8px 8px 0; }
+  .pull-quote p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 16px; color: var(--navy); line-height: 1.5; }
+
+  /* CASE HEADER */
+  .case-header { background: var(--navy); padding: 16px 44px; display: flex; align-items: center; gap: 16px; }
+  .case-badge { background: var(--teal); color: white; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; white-space: nowrap; }
+  .case-title { font-family: 'Playfair Display', serif; font-size: 20px; color: white; }
+
+  /* TAG */
+  .tag { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 9px; border-radius: 20px; }
+  .tag-teal { background: var(--tealPale); color: var(--teal); }
+  .tag-coral { background: var(--coralPale); color: var(--coral); }
+
+  /* RESEARCH STAT */
+  .research-stat { background: var(--navy); border-radius: 10px; padding: 14px 18px; border-left: 3px solid var(--teal); }
+  .research-stat p { font-size: 12px; color: rgba(255,255,255,0.85); line-height: 1.6; }
+  .research-stat .cite { font-size: 10px; color: var(--tealLight); margin-top: 6px; font-style: italic; }
+
+  .divider { height: 1px; background: var(--border); margin: 12px 0; }
+  .text-sm { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .gap-sm { display: flex; flex-direction: column; gap: 10px; }
+  .gap-md { display: flex; flex-direction: column; gap: 14px; }
+  .mb-sm { margin-bottom: 10px; }
+  .mb-md { margin-bottom: 14px; }
+  strong.teal { color: var(--teal); }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <div class="nav-title">Nutrition in Cleft & Craniofacial Care — Mari Hutchison, Pediatric Dietitian</div>
+  <div class="nav-controls">
+    <span class="section-pill" id="sectionPill"></span>
+    <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>← Prev</button>
+    <span class="slide-counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+  </div>
+</div>
+
+<div class="deck" id="deck">
+
+<!-- ===================== SLIDE 1: TITLE ===================== -->
+<div class="slide active slide-title" data-section="Title">
+  <div class="title-eyebrow">Resident Education Series · Cleft & Craniofacial Program</div>
+  <div class="title-main">Nutrition in Cleft &amp; Craniofacial Care</div>
+  <div class="title-presenter">
+    <strong>Mari Hutchison</strong>
+    Pediatric Dietitian
+  </div>
+</div>
+
+<!-- ===================== SLIDE 2: LEARNING OBJECTIVES ===================== -->
+<div class="slide slide-content" data-section="Objectives">
+  <div class="teal-bar"></div>
+  <div class="slide-header">
+    <div class="slide-eyebrow">Before We Begin</div>
+    <div class="slide-heading">Learning Objectives</div>
+  </div>
+  <div class="slide-body">
+    <div class="gap-sm">
+      <div class="step"><div class="step-num">1</div><div><h5>Feeding Mechanics & Ability</h5><p>Understand the effects of cleft palate and craniofacial anomalies on feeding mechanics and overall feeding ability.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div><h5>Common Causes of Growth Faltering</h5><p>Identify the most common reasons cleft and craniofacial infants fail to gain adequate weight.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div><h5>Feeding Interventions in Clinical Practice</h5><p>Compare specialty feeding systems and techniques used to support oral feeding in this population.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div><h5>Nutrition Support</h5><p>Recognize when and how to provide nutritional supplementation and enteral feeding support.</p></div></div>
+      <div class="step"><div class="step-num">5</div><div><h5>Perioperative Nutrition</h5><p>Discuss nutrition considerations before and after craniofacial surgery at each stage of the surgical timeline.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 3: SECTION 1 ===================== -->
+<div class="slide slide-section" data-section="Why It Matters">
+  <div class="section-ghost">1</div>
+  <div class="section-label">Section 1</div>
+  <div class="section-title">Why Nutrition Matters for Your Patients</div>
+  <div class="section-desc">Understanding the nutritional stakes before, during, and after surgical care for cleft and craniofacial patients.</div>
+</div>
+
+<!-- ===================== SLIDE 4: CLEFT TYPES & MALNUTRITION ===================== -->
+<div class="slide slide-content" data-section="Why It Matters">
+  <div class="teal-bar"></div>
+  <div class="slide-header">
+    <div class="slide-eyebrow">Section 1 · Why It Matters</div>
+    <div class="slide-heading">Cleft Types, Feeding Outcomes &amp; Malnutrition Risk</div>
+  </div>
+  <div class="slide-body">
+    <div class="two-col">
+      <div>
+        <table class="data-table mb-md">
+          <thead><tr><th>Cleft Type</th><th>Feeding Ability</th><th>Nutrition Risk</th></tr></thead>
+          <tbody>
+            <tr><td>Cleft Lip Only (CL)</td><td>Mild difficulty; lip seal impaired</td><td><span class="tag tag-teal">Low–Moderate</span></td></tr>
+            <tr><td>Cleft Palate Only (CP)</td><td>Cannot generate negative pressure; prolonged feeds</td><td><span class="tag tag-coral">High</span></td></tr>
+            <tr><td>Cleft Lip &amp; Palate (CLP)</td><td>Most significant challenge; combined deficits</td><td><span class="tag tag-coral">Highest</span></td></tr>
+            <tr><td>Submucous Cleft</td><td>Often missed early; subtle but cumulative difficulty</td><td><span class="tag tag-teal">Moderate</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="gap-sm">
+        <div class="research-stat">
+          <p>Infants with cleft lip and palate had a significantly higher prevalence of malnutrition than those with isolated cleft lip — <strong style="color:var(--tealLight)">56% vs 30%</strong> respectively — with more severe cleft phenotypes posing greater feeding challenges.</p>
+          <div class="cite">Nahimana et al., Rwanda multicenter study (PMC 2024)</div>
+        </div>
+        <div class="research-stat">
+          <p>Among 855 children undergoing initial cleft repair, <strong style="color:var(--tealLight)">22.3% were at least moderately chronically malnourished</strong> at the time of surgery — establishing malnutrition as a measurable surgical risk factor.</p>
+          <div class="cite">Rosen et al., Children's Minnesota / U of Minnesota (PubMed 2020)</div>
+        </div>
+        <div class="research-stat">
+          <p>A cross-sectional study found <strong style="color:var(--tealLight)">68% of infants with CL±P were malnourished</strong>, with 57% experiencing moderate-to-severe malnutrition prior to surgical repair.</p>
+          <div class="cite">Tungotyo et al., BMC Pediatrics (2017)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 5: NUTRITIONAL STAKES ===================== -->
+<div class="slide slide-content" data-section="Why It Matters">
+  <div class="teal-bar"></div>
+  <div class="slide-header">
+    <div class="slide-eyebrow">Section 1 · Why It Matters</div>
+    <div class="slide-heading">Nutritional Stakes for Your Patients</div>
+  </div>
+  <div class="slide-body">
+    <div class="pull-quote mb-md">
+      <p>"For many families, feeding becomes the first major medical challenge after diagnosis."</p>
+    </div>
+    <div class="three-col">
+      <div class="card card-coral">
+        <h4>Surgical Readiness</h4>
+        <ul class="dot-list">
+          <li class="alert">Poor growth delays lip &amp; palate repair</li>
+          <li class="alert">Weight thresholds required for anesthesia</li>
+          <li class="alert">Malnutrition impairs wound healing</li>
+        </ul>
+      </div>
+      <div class="card card-amber">
+        <h4>Feeding Physiology</h4>
+        <ul class="dot-list">
+          <li class="warn">Increased energy expenditure from feeding effort</li>
+          <li class="warn">Feeding fatigue limits intake</li>
+          <li class="warn">Aspiration and airway risk</li>
+        </ul>
+      </div>
+      <div class="card card-teal">
+        <h4>Family Impact</h4>
+        <ul class="dot-list">
+          <li>Parent stress and anxiety</li>
+          <li>Caregiver exhaustion</li>
+          <li>Bonding and breastfeeding challenges</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:14px;">
+      <div class="pearl"><div class="pearl-icon">★</div><p>Feeding challenges in these patients require a special focus on feeding ability and growth from all clinical staff involved. Early education to families and timely consultation with <strong>Speech-Language Pathology and Registered Dietitians</strong> are essential to optimizing outcomes.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 6: SECTION 2 ===================== -->
+<div class="slide slide-section" data-section="Feeding Physiology">
+  <div class="section-ghost">2</div>
+  <div class="section-label">Section 2</div>
+  <div class="section-title">Normal Feeding Physiology vs. Cleft Feeding</div>
+  <div class="section-desc">Understanding the biomechanics of infant feeding and what changes with cleft anomalies.</div>
+</div>
+
+<!-- ===================== SLIDE 7: NORMAL SSB ===================== -->
+<div class="slide slide-content" data-section="Feeding Physiology">
+  <div class="teal-bar"></div>
+  <div class="slide-header">
+    <div class="slide-eyebrow">Section 2 · Feeding Physiology</div>
+    <div class="slide-heading">Normal Suck-Swallow-Breathe Coordination</div>
+  </div>
+  <div class="slide-body">
+    <div class="two-col-wide">
+      <div class="gap-sm">
+        <div class="step"><div class="step-num">1</div><div><h5>Lip &amp; Jaw Seal</h5><p>Infant creates an airtight seal around nipple, enabling negative pressure generation.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div><h5>Negative Intraoral Pressure</h5><p>Tongue and soft palate work together to create suction, drawing milk into the oral cavity.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div><h5>Peristaltic Tongue Motion</h5><p>Anterior-to-posterior wave moves bolus toward pharynx.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div><h5>Swallow-Breathe Coordination</h5><p>1 suck : 1 swallow : 1 breath ratio in term infants — any disruption cascades quickly.</p></div></div>
+      </div>
+      <div class="gap-sm">
+        <div class="card card-navy">
+          <h4>The Critical Factor</h4>
+          <p>Normal feeding depends entirely on the ability to generate <strong style="color:var(--tealLight)">negative intraoral pressure</strong> — not possible with an open palate.</p>
+        </div>
+        <div class="card card-teal">
+          <h4>Normal Feeding Rate</h4>
+          <ul class="dot-list">
+            <li>~1 oz per 10 minutes</li>
+            <li>Complete feed in 20–30 min</li>
+            <li>No excessive fatigue or respiratory effort</li>
+            <li>Consistent weight gain expected</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 8: CLEFT TYPE AFFECTS ===================== -->
+<div class="slide slide-content" data-section="Feeding Physiology">
+  <div class="teal-bar"></div>
+  <div class="slide-header">
+    <div class="slide-eyebrow">Section 2 · Feeding Physiology</div>
+    <div class="slide-heading">How Cleft Type Affects Feeding</div>
+  </div>
+  <div class="slide-body">
+    <div class="three-col mb-md">
+      <div class="card">
+        <h4>Cleft Lip Only</h4>
+        <ul class="dot-list">
+          <li>Lip seal impaired</li>
+          <li>Suction generally preserved</li>
+          <li class="warn">Air leakage → aerophagia</li>
+          <li>Least feeding complexity</li>
+        </ul>
+      </div>
+      <div class="card card-amber">
+        <h4>Cleft Palate</h4>
+        <ul class="dot-list">
+          <li class="warn">Cannot generate negative pressure</li>
+          <li class="warn">Nasal regurgitation common</li>
+          <li class="warn">Prolonged, exhausting feeds</li>
+          <li class="alert">Significant growth faltering risk</li>
+        </ul>
+      </div>
+      <div class="card card-coral">
+        <h4>Pierre Robin Sequence</h4>
+        <ul class="dot-list">
+          <li class="alert">Micrognathia → tongue base obstruction</li>
+          <li class="alert">Glossoptosis; airway compromise</li>
+          <li class="alert">High NG/G-tube dependence rate</li>
+          <li class="alert">Most complex feeding challenge</li>
+        </ul>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="card card-teal">
+        <h4>Aerophagia</h4>
+        <p>Air swallowing → abdominal distension, early satiety, and poor volume intake. Pacing and positioning significantly reduce this.</p>
+      </div>
+      <div class="card">
+        <h4>Nasal Regurgitation</h4>
+        <p>Milk passes through the open palate into the nasal cavity — indicates poor seal, feed inefficiency, and aspiration risk if combined with airway compromise.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 9: OTHER CRANIOFACIAL ===================== -->
+<div class="slide slide-content" data-section="Feeding Physiology">
+  <div class="teal-bar"></div>
+  <div class="slide-header">
+    <div class="slide-eyebrow">Section 2 · Feeding Physiology</div>
+    <div class="slide-heading">Other Craniofacial Anomalies</div>
+  </div>
+  <div class="slide-body">
+    <div class="two-col">
+      <div>
+        <table class="data-table">
+          <thead><tr><th>Condition</th><th>Primary Feeding Challenge</th></tr></thead>
+          <tbody>
+            <tr><td>Treacher Collins</td><td>Micrognathia, choanal atresia, airway</td></tr>
+            <tr><td>22q11.2 Deletion</td><td>Velopharyngeal insufficiency, hypotonia</td></tr>
+            <tr><td>Stickler Syndrome</td><td>Pierre Robin features, cleft palate</td></tr>
+            <tr><td>Apert Syndrome</td><td>Midface hypoplasia, airway compromise</td></tr>
+            <tr><td>Goldenhar</td><td>Hemifacial microsomia, asymmetric jaw</td></tr>
+            <tr><td>CHARGE</td><td>Multi-system; often tube-fed long-term</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="gap-sm">
+        <div class="card card-navy" style="flex:1;">
+          <h4>Common Thread</h4>
+          <p>Across all craniofacial conditions, the shared challenge is <strong style="color:var(--tealLight)">inadequate oral intake relative to energy needs.</strong> The mechanism differs; the nutritional approach is often similar.</p>
+        </div>
+        <div class="card card-teal" style="flex:1;">
+          <h4>Visual Tips for Residents</h4>
+          <ul class="dot-list">
+            <li>Watch the infant's neck and chest during feeding</li>
+            <li>Nasal flaring = respiratory compromise</li>
+            <li>Color changes = stop feeding immediately</li>
+            <li>Noisy, wet breathing = possible aspiration</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 10: SECTION 3 ===================== -->
+<div class="slide slide-section" data-section="Feeding Assessment">
+  <div class="section-ghost">3</div>
+  <div class="section-label">Section 3</div>
+  <div class="section-title">Feeding Assessment</div>
+  <div class="section-desc">What to ask, what to observe, and when to escalate care.</div>
+</div>
+
+<!-- ===================== SLIDE 11: 5 QUESTIONS + OUTPUT + SLP ===================== -->
+<div class="slide slide-content" data-section="Feeding Assessment">
+  <div class="teal-bar"></div>
+  <div class="slide-header">
+    <div class="slide-eyebrow">Section 3 · Feeding Assessment</div>
+    <div class="slide-heading">5 Questions Every Resident Should Ask</div>
+  </div>
+  <div class="slide-body">
+    <div class="two-col-wide">
+      <div class="gap-sm">
+        <div class="step"><div class="step-num">1</div><div><h5>How long does each feed take?</h5><p>Normal: 20–30 min. Over 30–40 min = feeding difficulty requiring evaluation.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div><h5>Any coughing, choking, or color change?</h5><p>Respiratory symptoms during feeds suggest aspiration until proven otherwise.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div><h5>How much is the baby taking per feed and per day?</h5><p>Track oz/kg/day. Inadequate volume often precedes weight faltering by days.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div><h5>How is the weight gain trending?</h5><p>Plot on growth chart every visit. Declining trajectory = nutrition intervention needed now.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div><h5>How is the caregiver coping?</h5><p>Caregiver burnout directly affects feeding consistency and infant outcomes.</p></div></div>
+      </div>
+      <div class="gap-sm">
+        <div class="card card-teal">
+          <h4>Output to Monitor</h4>
+          <ul class="dot-list">
+            <li>Adequate wet diapers (≥6/day newborns)</li>
+            <li>Stool frequency and consistency</li>
+            <li>Signs of dehydration</li>
+          </ul>
+        </div>
+        <div class="card card-coral">
+          <h4>Red Flags — Escalate Now</h4>
+          <ul class="dot-list">
+            <li class="alert">Feeds consistently &gt;30–40 minutes</li>
+            <li class="alert">Poor or absent weight gain</li>
+            <li class="alert">Oxygen desaturations during feeding</li>
+            <li class="alert">Recurrent pneumonia</li>
+            <li class="alert">Clinical dehydration</li>
+          </ul>
+        </div>
+        <div class="pearl"><div class="pearl-icon">★</div><p>When in doubt, refer to <strong>SLP</strong> for formal feeding evaluation. Consider <strong>MBSS</strong> if aspiration is suspected.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 12: CLINICAL OBSERVATION ===================== -->
+<div class="slide slide-content" data-section="Feeding Assessment">
+  <div class="teal-bar"></div>
+  <div class="slide-header">
+    <div class="slide-eyebrow">Section 3 · Feeding Assessment</div>
+    <div class="slide-heading">Clinical Observation: What to Look For</div>
+  </div>
+  <div class="slide-body">
+    <div class="two-col">
+      <div class="gap-sm">
+        <div class="card">
+          <h4>Observe During a Feed</h4>
+          <ul class="dot-list">
+            <li>Positioning of infant and caregiver</li>
+            <li>Lip and jaw seal quality</li>
+            <li>Suck-swallow-breathe coordination</li>
+            <li>Respiratory effort (nasal flaring, retractions)</li>
+            <li>Nasal regurgitation occurrence</li>
+            <li>Feeding pacing and pauses</li>
+            <li>Signs of fatigue (decreased effort, drowsiness)</li>
+          </ul>
+        </div>
+        <div class="card card-teal">
+          <h4>Stooling &amp; Output</h4>
+          <ul class="dot-list">
+            <li>Adequate wet diapers (≥6/day for newborns)</li>
+            <li>Stool frequency and consistency</li>
+            <li>Signs of dehydration</li>
+          </ul>
+        </div>
+      </div>
+      <div class="gap-sm">
+        <div class="card card-coral">
+          <h4>Red Flags — Escalate Now</h4>
+          <ul class="dot-list">
+            <li class="alert">Feeds consistently &gt;30–40 minutes</li>
+            <li class="alert">Poor or absent weight gain</li>
+            <li class="alert">Oxygen desaturations during feeding</li>
+            <li class="alert">Recurrent pneumonia or respiratory illness</li>
+            <li class="alert">Clinical dehydration</li>
+            <li class="alert">Caregiver unable to maintain feeding schedule</li>
+          </ul>
+        </div>
+        <div class="pearl"><div class="pearl-icon">★</div><p>When in doubt, refer to <strong>SLP</strong> for formal feeding evaluation and consider <strong>MBSS</strong> if aspiration is suspected.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 13: SECTION 4 ===================== -->
+<div class="slide slide-section" data-section="Feeding Interventions">
+  <div class="section-ghost">4</div>
+  <div class="section-label">Section 4</div>
+  <div class="section-title">Feeding Interventions</div>
+  <div class="section-desc">Specialty systems, positioning, techniques, and enteral support options.</div>
+</div>
+
+<!-- ===================== SLIDE 14: FEEDERS + POSITIONING + TECHNIQUES (COMBINED) ===================== -->
+<div class="slide slide-content" data-section="Feeding Interventions">
+  <div class="teal-bar"></div>
+  <div class="slide-header">
+    <div class="slide-eyebrow">Section 4 · Feeding Interventions</div>
+    <div class="slide-heading">Specialty Feeders, Positioning &amp; Techniques</div>
+  </div>
+  <div class="slide-body">
+    <div class="two-col mb-md">
+      <div>
+        <table class="data-table">
+          <thead><tr><th>Feeder</th><th>Best For</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Haberman / Medela SpecialNeeds</strong></td><td>Cleft palate, Pierre Robin, hypotonia — no suction needed</td></tr>
+            <tr><td><strong>Pigeon Nipple</strong></td><td>Moderate cleft palate; one-way valve, minimal suction</td></tr>
+            <tr><td><strong>Dr. Brown's Specialty</strong></td><td>Cleft lip, mild CP; reduces aerophagia</td></tr>
+            <tr><td><strong>Mead Johnson Nurser</strong></td><td>Squeeze bottle; caregiver controls flow rate</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="gap-sm">
+        <div class="card card-teal">
+          <h4>Positioning &amp; Support</h4>
+          <ul class="dot-list">
+            <li><strong>Upright (45–90°)</strong> — reduces nasal regurgitation and aspiration</li>
+            <li>Side-lying appropriate for some cleft lip cases</li>
+            <li>Avoid supine — increases aspiration risk significantly</li>
+            <li>Chin and cheek support to improve seal</li>
+          </ul>
+        </div>
+        <div class="card card-amber">
+          <h4>Pacing, Thickening &amp; Cues</h4>
+          <ul class="dot-list">
+            <li class="warn">Pause every 3–5 sucks; tilt bottle down to reduce flow</li>
+            <li>Follow infant hunger/satiety cues, not the clock</li>
+            <li class="alert">Feed thickening only with confirmed aspiration + MBSS guidance</li>
+            <li>Risk of NEC with thickening in premature infants</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="pearl"><div class="pearl-icon">★</div><p>No single feeder is universally superior. <strong>Trial with the family</strong> alongside SLP and dietitian guidance is the standard approach.</p></div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 16: ENTERAL SUPPORT ===================== -->
+<div class="slide slide-content" data-section="Feeding Interventions">
+  <div class="teal-bar"></div>
+  <div class="slide-header">
+    <div class="slide-eyebrow">Section 4 · Feeding Interventions</div>
+    <div class="slide-heading">Enteral Nutrition Support</div>
+  </div>
+  <div class="slide-body">
+    <div class="two-col">
+      <div class="gap-sm">
+        <div class="card">
+          <h4>Nasogastric (NG) Tube</h4>
+          <ul class="dot-list">
+            <li>Short-term bridge when oral feeds insufficient</li>
+            <li>Preserves opportunity for oral feeding practice</li>
+            <li>Commonly used in Pierre Robin sequence</li>
+            <li class="warn">Caregiver training required</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>Gastrostomy Tube (G-Tube)</h4>
+          <ul class="dot-list">
+            <li>Indicated for long-term inability to meet needs orally</li>
+            <li>Complex syndromic patients or persistent aspiration</li>
+            <li>Allows full nutrition without feeding fatigue</li>
+            <li class="warn">Surgical placement; site care required</li>
+          </ul>
+        </div>
+      </div>
+      <div class="gap-sm">
+        <div class="card card-coral">
+          <h4>Indications for Enteral Support</h4>
+          <ul class="dot-list">
+            <li class="alert">Unable to meet ≥75–80% of needs orally</li>
+            <li class="alert">Recurrent aspiration with oral feeds</li>
+            <li class="alert">Failure to thrive despite interventions</li>
+            <li class="alert">Pre-op nutritional optimization needed</li>
+            <li class="alert">Caregiver unable to sustain oral feeding demands</li>
+          </ul>
+        </div>
+        <div class="pearl"><div class="pearl-icon">★</div><p>Enteral feeding is not a failure of oral feeding — it is a <strong>clinical tool</strong> to support growth while the infant develops oral skills and awaits surgical repair.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 17: SECTION 5 ===================== -->
+<div class="slide slide-section" data-section="Growth & Nutrition">
+  <div class="section-ghost">5</div>
+  <div class="section-label">Section 5</div>
+  <div class="section-title">Growth &amp; Nutrition Management</div>
+  <div class="section-desc">Energy targets, formula strategies, monitoring, and failure to thrive prevention.</div>
+</div>
+
+<!-- ===================== SLIDE 18: NUTRITION GOALS ===================== -->
+<div class="slide slide-content" data-section="Growth & Nutrition">
+  <div class="teal-bar"></div>
+  <div class="slide-header">
+    <div class="slide-eyebrow">Section 5 · Growth &amp; Nutrition Management</div>
+    <div class="slide-heading">Nutrition Goals &amp; Targets</div>
+  </div>
+  <div class="slide-body">
+    <div class="two-col">
+      <div class="gap-sm">
+        <div class="two-col" style="gap:10px;">
+          <div class="stat-box"><div class="stat-num">1.1–1.4x</div><div class="stat-label">EER — estimated energy requirement for catch-up growth</div></div>
+          <div class="stat-box"><div class="stat-num">↑ Protein</div><div class="stat-label">Increased protein needs relative to standard recommendations</div></div>
+        </div>
+        <div class="card card-teal">
+          <h4>When to Increase Caloric Density</h4>
+          <ul class="dot-list">
+            <li>Volume limited by feed tolerance or fatigue</li>
+            <li>Growth velocity below expected</li>
+            <li>Approaching surgical weight threshold</li>
+            <li>Caregiver unable to sustain required feed volumes</li>
+          </ul>
+        </div>
+      </div>
+      <div class="gap-sm">
+        <div class="card">
+          <h4>Caloric Fortification Strategies</h4>
+          <ul class="dot-list">
+            <li><strong>Concentrate formula</strong> — e.g., 22–24–27 kcal/oz</li>
+            <li><strong>Add fat source</strong> — MCT oil, vegetable oil</li>
+            <li><strong>Human milk fortifier</strong> — for breastmilk-fed infants</li>
+            <li><strong>Modular carbohydrate</strong> — Duocal, Polycose</li>
+          </ul>
+        </div>
+        <div class="card card-amber">
+          <h4>Hydration Goals</h4>
+          <ul class="dot-list">
+            <li class="warn">100–150 mL/kg/day for neonates</li>
+            <li>Monitor wet diapers closely</li>
+            <li class="warn">At-risk for dehydration with prolonged feeds</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 19: COMMON MISTAKES ===================== -->
+<div class="slide slide-content" data-section="Growth & Nutrition">
+  <div class="teal-bar"></div>
+  <div class="slide-header">
+    <div class="slide-eyebrow">Section 5 · Growth &amp; Nutrition Management</div>
+    <div class="slide-heading">Common Nutrition Management Mistakes</div>
+  </div>
+  <div class="slide-body">
+    <div class="two-col mb-md">
+      <div class="card card-coral">
+        <h4>Mistake 1: Volume Before Density</h4>
+        <p>Recommending increased feed volume when the infant is already fatigued. <strong>Increasing caloric density</strong> should come before pushing more volume.</p>
+      </div>
+      <div class="card card-coral">
+        <h4>Mistake 2: Ignoring Reflux</h4>
+        <p>GERD is highly prevalent in cleft infants. Unmanaged reflux limits caloric retention and worsens intake and weight trends.</p>
+      </div>
+      <div class="card card-coral">
+        <h4>Mistake 3: "Wait Until After Surgery"</h4>
+        <p>Assuming nutrition will improve automatically post-op. Surgery requires adequate growth — <strong>nutrition must happen first.</strong></p>
+      </div>
+      <div class="card card-coral">
+        <h4>Mistake 4: Prolonged Exhausting Feeds</h4>
+        <p>Feeds &gt;40 minutes burn more calories than the infant ingests. Energy expenditure during a prolonged feed can negate its caloric value.</p>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="card card-teal">
+        <h4>Growth Chart Monitoring</h4>
+        <ul class="dot-list">
+          <li>Plot weight, length, and HC at every visit</li>
+          <li>Track <strong>weight velocity</strong> — trends matter more than single points</li>
+          <li>Crossing ≥2 percentile lines downward = immediate action</li>
+        </ul>
+      </div>
+      <div class="pearl"><div class="pearl-icon">★</div><p>When growth faltering is identified, <strong>consult dietitian and SLP as first response</strong> when available — before escalating to enteral support.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 20: FTT + SURGICAL TIMELINE COMBINED ===================== -->
+<div class="slide slide-content" data-section="Growth & Nutrition">
+  <div class="teal-bar"></div>
+  <div class="slide-header">
+    <div class="slide-eyebrow">Section 5 · Growth &amp; Nutrition Management</div>
+    <div class="slide-heading">Nutrition by Age Group &amp; Stage</div>
+  </div>
+  <div class="slide-body">
+    <table class="data-table">
+      <thead><tr><th>Age / Stage</th><th>Common Nutrition Problems</th><th>Common Interventions</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Newborn – 3 months</strong></td>
+          <td>Feeding fatigue, nasal regurgitation, poor weight gain, NG dependence</td>
+          <td>Specialty feeder, upright positioning, caloric fortification, NG if needed</td>
+        </tr>
+        <tr>
+          <td><strong>3–12 months (pre-lip/palate repair)</strong></td>
+          <td>Failure to thrive, inadequate surgical weight, GERD, caregiver exhaustion</td>
+          <td>Concentrated formula, caloric density increase, dietitian + SLP co-management</td>
+        </tr>
+        <tr>
+          <td><strong>Post-lip repair</strong></td>
+          <td>Feeding method transition, oral aversion risk, caloric gaps</td>
+          <td>Syringe/cup/spoon feeding, resume bottle per surgeon, monitor weight closely</td>
+        </tr>
+        <tr>
+          <td><strong>Post-palate repair</strong></td>
+          <td>Feeding refusal, oral aversion, weight loss, restricted textures</td>
+          <td>Liquid/pureed diet, calorie-dense foods, SLP for aversion, NG if &lt;75% met</td>
+        </tr>
+        <tr>
+          <td><strong>School age (bone graft)</strong></td>
+          <td>Soft diet restriction, weight loss, micronutrient gaps</td>
+          <td>High protein, calcium + vitamin D, zinc + vitamin C for wound healing</td>
+        </tr>
+        <tr>
+          <td><strong>Adolescent (orthognathic)</strong></td>
+          <td>Liquid diet 6–8+ weeks, avg 5–10% body weight loss, poor compliance</td>
+          <td>Pre-op nutrition optimization, high-calorie liquid supplements, close follow-up</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:12px;">
+      <div class="pearl"><div class="pearl-icon">★</div><p><strong>Protocols vary significantly by institution and surgeon.</strong> Always coordinate post-op feeding instructions with your surgical team before counseling families.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 21: SECTION 6 ===================== -->
+<div class="slide slide-section" data-section="Surgical Timeline">
+  <div class="section-ghost">6</div>
+  <div class="section-label">Section 6</div>
+  <div class="section-title">Surgical Timeline &amp; Nutrition Considerations</div>
+  <div class="section-desc">Pre- and post-operative nutritional guidance across the cleft repair journey.</div>
+</div>
+
+<!-- ===================== SLIDE 22: SURGICAL ROADMAP + POST-OP (COMBINED) ===================== -->
+<div class="slide slide-content" data-section="Surgical Timeline">
+  <div class="teal-bar"></div>
+  <div class="slide-header">
+    <div class="slide-eyebrow">Section 6 · Surgical Timeline</div>
+    <div class="slide-heading">Surgical Roadmap &amp; Post-Op Feeding</div>
+  </div>
+  <div class="slide-body">
+    <div class="gap-sm">
+      <div class="step"><div class="step-num" style="background:var(--teal);">1</div><div><h5>Lip Repair — ~3 months</h5><p><strong>Pre-op:</strong> optimize weight gain. <strong>Post-op:</strong> syringe/cup/spoon at corner of mouth; no pressure on lip repair; breastfeeding clearance ~2–4 weeks per surgeon.</p></div></div>
+      <div class="step"><div class="step-num" style="background:var(--teal);">2</div><div><h5>Palate Repair — 9–18 months (varies by institution)</h5><p><strong>Pre-op:</strong> adequate weight, check iron. <strong>Post-op:</strong> liquid diet 1–2 weeks, soft foods weeks 2–4; no utensils in mouth; monitor for feeding refusal and oral aversion.</p></div></div>
+      <div class="step"><div class="step-num" style="background:var(--teal);">3</div><div><h5>Alveolar Bone Graft — ~8–11 years</h5><p><strong>Pre-op:</strong> adequate nutrition for bone healing. <strong>Post-op:</strong> soft/liquid diet 4–6 weeks; high protein, calcium, vitamin D, zinc and vitamin C critical. No straws.</p></div></div>
+      <div class="step"><div class="step-num" style="background:var(--amber);">4</div><div><h5>Orthognathic Surgery — late adolescence</h5><p><strong>Pre-op:</strong> proactive nutrition counseling, weight optimization essential. <strong>Post-op:</strong> liquid only 6–8+ weeks; average 5–10% body weight loss common; high-calorie supplements required.</p></div></div>
+    </div>
+    <div style="margin-top:12px;">
+      <div class="pearl"><div class="pearl-icon">★</div><p><strong>Protocols vary significantly by institution and surgeon.</strong> Always coordinate post-op feeding instructions with your surgical team before counseling families.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 23: SECTION 7 ===================== -->
+<div class="slide slide-section" data-section="Syndromic Patients">
+  <div class="section-ghost">7</div>
+  <div class="section-label">Section 7</div>
+  <div class="section-title">Syndromic &amp; Complex Patients</div>
+  <div class="section-desc">Heightened nutritional complexity in Pierre Robin, Treacher Collins, 22q11.2 deletion, and other syndromes.</div>
+</div>
+
+<!-- ===================== SLIDE 24: SYNDROMES COMBINED ===================== -->
+<div class="slide slide-content" data-section="Syndromic Patients">
+  <div class="teal-bar"></div>
+  <div class="slide-header">
+    <div class="slide-eyebrow">Section 7 · Syndromic Patients</div>
+    <div class="slide-heading">Nutritional Reality &amp; Approach by Syndrome</div>
+  </div>
+  <div class="slide-body">
+    <div class="three-col mb-md">
+      <div class="card card-coral">
+        <h4>Pierre Robin Sequence</h4>
+        <ul class="dot-list" style="font-size:12px;">
+          <li class="alert">~50–80% require NG in neonatal period</li>
+          <li class="alert">Prone/lateral positioning only — never supine</li>
+          <li class="alert">High aspiration risk with oral feeds</li>
+          <li>Airway management takes priority over oral feeding</li>
+          <li>Mandibular catch-up growth may restore oral feeding</li>
+        </ul>
+      </div>
+      <div class="card card-amber">
+        <h4>Treacher Collins</h4>
+        <ul class="dot-list" style="font-size:12px;">
+          <li class="warn">Severe airway compromise — tracheostomy common</li>
+          <li class="warn">High G-tube rate; often tube-dependent long-term</li>
+          <li class="warn">Cleft palate in ~30%</li>
+          <li>Nutrition management needed across multiple surgeries</li>
+          <li>Condition-specific micronutrient monitoring</li>
+        </ul>
+      </div>
+      <div class="card card-teal">
+        <h4>22q11.2 Deletion</h4>
+        <ul class="dot-list" style="font-size:12px;">
+          <li>Velopharyngeal insufficiency; nasal regurgitation</li>
+          <li class="warn">Hypotonia affects feeding coordination</li>
+          <li class="warn">Cardiac anomalies — increased energy needs</li>
+          <li class="warn">Hypoparathyroidism — monitor calcium closely</li>
+          <li>Condition-specific micronutrient deficiencies common</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card card-navy">
+      <h4>Principle for All Syndromic Patients</h4>
+      <p>The more complex the syndrome, the earlier and more proactively dietitian involvement should begin — ideally at diagnosis, in the NICU or at the first multidisciplinary team visit. <strong style="color:var(--tealLight)">Reactive nutrition management in syndromic patients leads to worse surgical readiness and outcomes.</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 25: ADVANCED TOPICS ===================== -->
+<div class="slide slide-content" data-section="Advanced Topics">
+  <div class="teal-bar"></div>
+  <div class="slide-header">
+    <div class="slide-eyebrow">Optional · Advanced Topics</div>
+    <div class="slide-heading">Topics for Further Learning</div>
+  </div>
+  <div class="slide-body">
+    <div class="three-col mb-md">
+      <div class="card">
+        <h4>Infant</h4>
+        <ul class="dot-list">
+          <li>Breastfeeding with cleft lip</li>
+          <li>Aspiration and MBSS guidance</li>
+          <li>GERD management in cleft infants</li>
+          <li>Breastmilk fortification strategies</li>
+        </ul>
+      </div>
+      <div class="card card-teal">
+        <h4>Developmental</h4>
+        <ul class="dot-list">
+          <li>Transition to solids</li>
+          <li>Oral aversion in older children</li>
+          <li>Texture progression post-repair</li>
+          <li>School-age eating challenges</li>
+        </ul>
+      </div>
+      <div class="card card-amber">
+        <h4>Long-Term</h4>
+        <ul class="dot-list">
+          <li>Reduced physical activity</li>
+          <li>Oral aversion / selective eating</li>
+          <li>Repeated dietary restrictions leading to disordered eating patterns</li>
+          <li>Condition-specific micronutrient deficiencies</li>
+          <li>Nutrition for corrective surgery during adolescence</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 26: KEY TAKEAWAYS ===================== -->
+<div class="slide slide-content" data-section="Summary">
+  <div class="teal-bar"></div>
+  <div class="slide-header">
+    <div class="slide-eyebrow">Summary</div>
+    <div class="slide-heading">Key Takeaways: A Multidisciplinary Approach</div>
+  </div>
+  <div class="slide-body">
+    <div class="two-col">
+      <div class="gap-sm">
+        <div class="card card-coral">
+          <h4>Major Red Flags to Watch For</h4>
+          <ul class="dot-list">
+            <li class="alert">Feeds consistently &gt;30–40 minutes</li>
+            <li class="alert">Poor or declining weight gain trajectory</li>
+            <li class="alert">Coughing, choking, or color changes during feeds</li>
+            <li class="alert">Recurrent respiratory illness</li>
+            <li class="alert">Caregiver unable to sustain feeding demands</li>
+            <li class="alert">Post-op feeding refusal or significant weight loss</li>
+          </ul>
+        </div>
+      </div>
+      <div class="gap-sm">
+        <div class="card card-teal">
+          <h4>When to Consult a Dietitian</h4>
+          <ul class="dot-list">
+            <li>At diagnosis — don't wait for weight loss to occur</li>
+            <li>Growth faltering or crossing percentile lines</li>
+            <li>Approaching surgical weight milestone</li>
+            <li>Pre- and post-operatively at every surgical stage</li>
+            <li>Any patient on enteral nutrition support</li>
+          </ul>
+        </div>
+        <div class="card card-amber">
+          <h4>When to Consult SLP</h4>
+          <ul class="dot-list">
+            <li class="warn">Feeds &gt;30–40 min or significant fatigue</li>
+            <li class="warn">Any respiratory symptoms during feeding</li>
+            <li class="warn">Suspected aspiration — consider MBSS</li>
+            <li class="warn">Post-op feeding refusal or oral aversion</li>
+            <li class="warn">Before initiating feed thickening</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 27: CLOSING ===================== -->
+<div class="slide slide-title" data-section="Closing">
+  <div class="title-eyebrow">Thank You</div>
+  <div class="title-main">These Patients Are at High Nutrition Risk</div>
+  <div class="title-presenter" style="max-width:620px; margin-top: 0;">
+    <p style="font-size:16px; color:rgba(255,255,255,0.65); line-height:1.7; margin-bottom:24px;">Cleft and craniofacial patients face significant nutritional challenges from birth through adolescence. Early, proactive nutrition involvement is not optional — it is central to surgical success, wound healing, and long-term outcomes.</p>
+    <strong>Mari Hutchison, Pediatric Dietitian</strong>
+    Available for consults &amp; co-management
+  </div>
+</div>
+
+</div><!-- /deck -->
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const sectionMap = {
+  'Title':'Title','Objectives':'Objectives','Why It Matters':'Section 1',
+  'Feeding Physiology':'Section 2','Feeding Assessment':'Section 3',
+  'Feeding Interventions':'Section 4','Growth & Nutrition':'Section 5',
+  'Surgical Timeline':'Section 6','Syndromic Patients':'Section 7',
+  'Advanced Topics':'Advanced','Summary':'Summary','Closing':'End'
+};
+let current = 0;
+const total = slides.length;
+
+function updateUI() {
+  document.getElementById('counter').textContent = `${current+1} / ${total}`;
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total-1;
+  const sec = slides[current].dataset.section || '';
+  document.getElementById('sectionPill').textContent = sectionMap[sec] || sec;
+  document.getElementById('progressBar').style.width = `${((current+1)/total)*100}%`;
+}
+
+function changeSlide(dir) {
+  const next = current + dir;
+  if (next < 0 || next >= total) return;
+  slides[current].classList.remove('active');
+  current = next;
+  slides[current].classList.add('active');
+  slides[current].scrollIntoView({ behavior:'smooth', block:'center' });
+  updateUI();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key==='ArrowRight'||e.key==='ArrowDown') changeSlide(1);
+  if (e.key==='ArrowLeft'||e.key==='ArrowUp') changeSlide(-1);
+});
+updateUI();
+</script>
+</body>
+</html>
